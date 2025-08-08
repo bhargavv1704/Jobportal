@@ -1,0 +1,83 @@
+<!-- core/templates/core/home.html -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #e3f2fd;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        a,
+        button {
+            background: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            display: inline-block;
+            margin: 10px 5px;
+        }
+
+        a:hover,
+        button:hover {
+            background: #0056b3;
+        }
+
+        form {
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Welcome, {{ user.username }}!</h1>
+
+        {% if user.is_authenticated %}
+        {% if user.is_employer %}
+        <p>You are logged in as <strong>Employer</strong>.</p>
+        <a href="#">Post a Job</a>
+        {% elif user.is_jobseeker %}
+        <p>You are logged in as <strong>Job Seeker</strong>.</p>
+        <a href="#">Browse Jobs</a>
+        {% endif %}
+
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+        {% else %}
+        <a href="{% url 'login' %}">Login</a>
+        <a href="{% url 'employer_register' %}">Register as Employer</a>
+        <a href="{% url 'jobseeker_register' %}">Register as Job Seeker</a>
+        {% endif %}
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Available Job Listings</h2>
+
+    {% if jobs %}
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        {% for job in jobs %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ job.title }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ job.location }}</h6>
+                    <p class="card-text">{{ job.description|truncatewords:30 }}</p>
+                </div>
+                <div class="card-footer d-flex justify-content-between">
+                    <small class="text-muted">Salary: ₹{{ job.salary }}</small>
+                    <small class="text-muted">Posted by: {{ job.employer.username }}</small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-center text-muted">No jobs posted yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
