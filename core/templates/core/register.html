@@ -1,74 +1,31 @@
-<!-- core/templates/core/register.html -->
+{% extends 'base.html' %}
+{% load widget_tweaks %}
 
-<!DOCTYPE html>
-<html>
-
-<head>
-    <title>{{ role }} Registration</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f2f2f2;
-            padding: 40px;
-        }
-
-        .container {
-            max-width: 400px;
-            margin: auto;
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        h2 {
-            text-align: center;
-            color: #333;
-        }
-
-        button {
-            background: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 4px;
-            width: 100%;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        button:hover {
-            background: #45a049;
-        }
-
-        a {
-            color: #4CAF50;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .link {
-            margin-top: 10px;
-            text-align: center;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="container">
-        <h2>{{ role }} Registration</h2>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Register as {{ role }}</button>
-        </form>
-        <div class="link">
-            <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Register</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        {% for field in form %}
+                        <div class="mb-3">
+                            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                            {{ field|add_class:"form-control" }}
+                            {% if field.errors %}
+                            <div class="text-danger">{{ field.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-success w-100">Register</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-</body>
-
-</html>
+</div>
+{% endblock %}

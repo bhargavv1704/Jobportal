@@ -1,95 +1,81 @@
-<!-- core/templates/core/base.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>Job Board</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Job Portal{% endblock %}</title>
 
-    <!-- Bootstrap CSS CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
-    <!-- Custom Styles -->
-    <style>
-        body {
-            background-color: #f4f6f9;
-        }
-
-        .navbar-brand {
-            font-weight: bold;
-            font-size: 1.5rem;
-        }
-
-        .content {
-            padding: 30px 15px;
-        }
-
-        footer {
-            padding: 10px;
-            background-color: #343a40;
-            color: white;
-            text-align: center;
-            margin-top: 30px;
-        }
-    </style>
+    {% block extra_css %}{% endblock %}
 </head>
 
 <body>
-
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'home' %}">JobBoard</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <i class="bi bi-briefcase-fill"></i> Job Portal
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
-                <ul class="navbar-nav">
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
                     {% if user.is_authenticated %}
+                    {% if user.is_employer %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'create_job_post' %}"><i
+                                class="bi bi-plus-circle"></i> Post Job</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}"><i
+                                class="bi bi-speedometer2"></i> Dashboard</a></li>
+                    {% elif user.is_jobseeker %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'job_list' %}"><i class="bi bi-search"></i>
+                            Find Jobs</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'applied_jobs' %}"><i
+                                class="bi bi-list-check"></i> Applied Jobs</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}"><i
+                                class="bi bi-person-circle"></i> Profile</a></li>
+                    {% endif %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'job_list' %}">All Jobs</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">{{ user.username }}</a>
-                    </li>
-                    <li class="nav-item">
-                        <form method="post" action="{% url 'logout' %}">
+                        <form method="POST" action="{% url 'logout' %}">
                             {% csrf_token %}
-                            <button class="btn btn-outline-light btn-sm ms-2" type="submit">Logout</button>
+                            <button class="btn btn-link nav-link" type="submit"><i class="bi bi-box-arrow-right"></i>
+                                Logout</button>
                         </form>
                     </li>
                     {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'register' %}">Register</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}"><i
+                                class="bi bi-box-arrow-in-right"></i> Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'employer_register' %}"><i
+                                class="bi bi-person-plus"></i> Employer Register</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'jobseeker_register' %}"><i
+                                class="bi bi-person-plus-fill"></i> Job Seeker Register</a></li>
                     {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="container content">
-        {% block content %}
-        {% endblock %}
+    <div class="container mt-4">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% block content %}{% endblock %}
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 JobBoard. All rights reserved.</p>
-    </footer>
-
-    <!-- Bootstrap JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
 </body>
 
 </html>
